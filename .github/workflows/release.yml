@@ -40,18 +40,14 @@ jobs:
         with:
           workflow_name: 'minor_version'
           version_key: ${{ steps.read_version.outputs.value }}
-          gist_token: ${{ secrets.GIST_TOKEN }}
           skip_bump: true
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Build and publish with Gradle
-        run: ./gradlew build publish
+        run: ./gradlew build
         env:
-          MAVEN_URL: ${{ secrets.MAVEN_URL }}
-          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
           GITHUB_ACTIONS: true
           SNAPSHOT: false
           MINOR_VERSION: ${{ steps.minor_version.outputs.version_build_number }}
@@ -63,8 +59,7 @@ jobs:
         with:
           workflow_name: 'minor_version'
           version_key: ${{ steps.read_version.outputs.value }}
-          gist_token: ${{ secrets.GIST_TOKEN }}
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: artifacts
           path: build/libs
