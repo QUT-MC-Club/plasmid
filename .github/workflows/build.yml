@@ -1,7 +1,6 @@
 name: Build
 
-on:
-  push:
+on: push
 
 jobs:
   build:
@@ -24,37 +23,11 @@ jobs:
         with:
           java-version: 17
 
-      - name: Read mod version from Gradle
-        id: read_version
-        uses: christian-draeger/read-properties@1.0.1
-        with:
-          path: './gradle.properties'
-          property: 'mod_version'
-
-      - name: Generate build number
-        uses: kNoAPP/gh-action-buildnum@95ff0793ae82a79441ec674ed370adf14134559e
-        id: 'minor_version'
-        with:
-          workflow_name: 'minor_version'
-          version_key: ${{ steps.read_version.outputs.value }}
-          skip_bump: true
-
-      - name: Generate build number
-        uses: kNoAPP/gh-action-buildnum@95ff0793ae82a79441ec674ed370adf14134559e
-        id: 'build_number'
-        with:
-          workflow_name: 'build_number'
-          version_key: ${{ format('{0}.{1}', steps.read_version.outputs.value, steps.minor_version.outputs.version_build_number) }}
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build and publish with Gradle
+      - name: Build with Gradle
         run: ./gradlew build
-        env:
-          GITHUB_ACTIONS: true
-          SNAPSHOT: true
-          MINOR_VERSION: ${{ steps.minor_version.outputs.version_build_number }}
-          BUILD_NUMBER: ${{ steps.build_number.outputs.version_build_number }}
 
       - uses: actions/upload-artifact@v4
         with:
