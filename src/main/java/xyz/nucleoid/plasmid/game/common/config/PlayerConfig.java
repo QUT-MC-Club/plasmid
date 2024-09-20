@@ -33,7 +33,7 @@ public final record PlayerConfig(int minPlayers, int maxPlayers, int thresholdPl
     }
 
     public record Countdown(int readySeconds, int fullSeconds) {
-        public static final Countdown DEFAULT = new Countdown(30, 5);
+        public static final Countdown DEFAULT = new Countdown(60, 10);
 
         public static final Codec<Countdown> CODEC = RecordCodecBuilder.create(instance -> {
             return instance.group(
