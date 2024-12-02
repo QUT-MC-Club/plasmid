@@ -24,43 +24,11 @@ jobs:
         with:
           java-version: 21
 
-      - name: Read mod version from Gradle
-        id: read_version
-        uses: christian-draeger/read-properties@1.0.1
-        with:
-          path: './gradle.properties'
-          property: 'mod_version'
-
-      - name: Generate build number
-        uses: kNoAPP/gh-action-buildnum@7952ffa54bc2c37e2c33bbb3d7226473274cce3e
-        id: 'minor_version'
-        with:
-          workflow_name: 'minor_version'
-          version_key: ${{ steps.read_version.outputs.value }}
-          gist_token: ${{ secrets.GIST_TOKEN }}
-          skip_bump: true
-
-      - name: Generate build number
-        uses: kNoAPP/gh-action-buildnum@7952ffa54bc2c37e2c33bbb3d7226473274cce3e
-        id: 'build_number'
-        with:
-          workflow_name: 'build_number'
-          version_key: ${{ format('{0}.{1}', steps.read_version.outputs.value, steps.minor_version.outputs.version_build_number) }}
-          gist_token: ${{ secrets.GIST_TOKEN }}
-
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build and publish with Gradle
-        run: ./gradlew build publish
-        env:
-          MAVEN_URL: ${{ secrets.MAVEN_URL }}
-          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
-          GITHUB_ACTIONS: true
-          SNAPSHOT: true
-          MINOR_VERSION: ${{ steps.minor_version.outputs.version_build_number }}
-          BUILD_NUMBER: ${{ steps.build_number.outputs.version_build_number }}
+      - name: Build with Gradle
+        run: ./gradlew build
 
       - uses: actions/upload-artifact@v4
         with:
