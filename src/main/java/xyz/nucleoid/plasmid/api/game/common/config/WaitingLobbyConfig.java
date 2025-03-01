@@ -38,7 +38,7 @@ public record WaitingLobbyConfig(PlayerLimiterConfig playerConfig, int minPlayer
     }
 
     public record Countdown(int readySeconds, int fullSeconds) {
-        public static final Countdown DEFAULT = new Countdown(30, 15);
+        public static final Countdown DEFAULT = new Countdown(45, 15);
 
         public static final Codec<Countdown> CODEC = RecordCodecBuilder.create(instance -> {
             return instance.group(
